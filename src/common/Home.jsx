@@ -20,7 +20,7 @@ function Home() {
 
   return (
     <>
-      {!AuthService().isUserLoggedIn() && <Navigate to={ConfigService.LOGIN_URL} replace={true} />}
+      {!AuthService().isUserLoggedIn() && <Navigate to={ConfigService.pageUrls.LOGIN_URL} replace={true} />}
 
       <div className="App">
         Home screen <b>{token.fullName}</b>

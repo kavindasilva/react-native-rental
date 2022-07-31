@@ -23,7 +23,7 @@ function Login() {
   useEffect(() => {
     setIsLoggedIn(AuthService().isUserLoggedIn());
     if (isLoggedIn) {
-      navigate(ConfigService.HOME_URL);
+      navigate(ConfigService.pageUrls.HOME_URL);
     }
   }, [isLoggedIn, navigate]);
 

@@ -1,24 +1,26 @@
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 
 import './App.css';
 import Login from './common/Login';
 import Home from './common/Home';
+import Main from './common/Main';
 import Page404 from './common/Page404';
 
 import ConfigService from './services/ConfigService'
+import AuthService from './services/AuthService';
 
 
 function App() {
-  const defaultPageUrl = ConfigService.LOGIN_URL;
+  const defaultPageUrl = '/';
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={defaultPageUrl} element={<Login />} />
-        <Route path="/" element={<Home />} />
-        <Route path={ConfigService.HOME_URL} element={<Home />} />
-        <Route path={ConfigService.ABOUT_URL} element={<div>About page</div>} />
+        <Route path={defaultPageUrl} element={<Main />} />
+        <Route path={ConfigService.pageUrls.LOGIN_URL} element={<Login />} />
+        <Route path={ConfigService.pageUrls.HOME_URL} element={<Home />} />
+        <Route path={ConfigService.pageUrls.ABOUT_URL} element={<RequireAuth><div>About page</div></RequireAuth>} />
 
         <Route path="*" element={<Page404 />} />
       </Routes>
@@ -27,9 +29,14 @@ function App() {
 }
 
 
+function RequireAuth({ children }) {
+  let location = useLocation();
 
-/**
- * @TODO use routing to allow page refresh after login
- */
+  if (!AuthService().isUserLoggedIn()) {
+    return <Navigate to={ConfigService.pageUrls.LOGIN_URL} state={{ from: location }} replace />;
+  }
+
+  return children;
+}
 
 export default App;
