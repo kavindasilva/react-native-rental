@@ -1,26 +1,41 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Alert from '@mui/material/Alert';
 
-import {login} from '../services/loginService';
+import { useNavigate } from "react-router-dom";
 
-function Login(props) {
+import ConfigService from '../services/ConfigService'
+import {login} from '../services/loginService';
+import AuthService from '../services/AuthService';
+// import StorageService from '../services/StorageService';
+
+function Login() {
+  let navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState('');
+
+  useEffect(() => {
+    setIsLoggedIn(AuthService().isUserLoggedIn());
+    if (isLoggedIn) {
+      navigate(ConfigService.HOME_URL);
+    }
+  }, [isLoggedIn, navigate]);
 
   const loginUser = e => {
     console.log(e);
     e.preventDefault();
     setIsLoading(true);
 
-    login(username, password).then(result => {
+    login(username, password).then(token => {
       setLoginError('')
-      props.setLoginToken(result);
+      AuthService().makeLoginSuccess(token);
+      setIsLoggedIn(AuthService().isUserLoggedIn());
     }).catch(error =>
       setLoginError(error)
     ).finally(() => 

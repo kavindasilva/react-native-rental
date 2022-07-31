@@ -1,21 +1,32 @@
 
-import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import './App.css';
 import Login from './common/Login';
 import Home from './common/Home';
+import Page404 from './common/Page404';
+
+import ConfigService from './services/ConfigService'
+
 
 function App() {
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginToken, setLoginToken] = useState('');
+  const defaultPageUrl = ConfigService.LOGIN_URL;
 
   return (
-    <div className="App">
-      {!loginToken && <Login setLoginToken={setLoginToken} />}
-      {loginToken && <Home setLoginToken={setLoginToken} />}
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path={defaultPageUrl} element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path={ConfigService.HOME_URL} element={<Home />} />
+        <Route path={ConfigService.ABOUT_URL} element={<div>About page</div>} />
+
+        <Route path="*" element={<Page404 />} />
+      </Routes>
+    </BrowserRouter>
+    );
 }
+
+
 
 /**
  * @TODO use routing to allow page refresh after login

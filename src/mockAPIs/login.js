@@ -4,7 +4,7 @@ const successfulCredentials = {
     password: 'root'
 }
 
-export function login(username, password) {
+export function loginResponse(username, password) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             if(username === successfulCredentials.username && password === successfulCredentials.password) {
@@ -13,9 +13,10 @@ export function login(username, password) {
             else {
                 reject('Username password not matching');
             }
-        })
+        }, 200)
     });
 }
+
 
 /**
 {
@@ -30,4 +31,3 @@ export function login(username, password) {
  */
 const defaultJwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZnVsbE5hbWUiOiJSb290IFVzZXIiLCJ1c2VyIjoicm9vdCIsIm5hbWUiOiJSb290IFVzZXIiLCJyb2xlIjoxLCJsYXN0TG9naW5UaW1lIjoxNTE2MjM5MDIyLCJpYXQiOjE1MTYyMzkwMjJ9.FRaINzwgMf4EuDm2Dg9V3wELRUTPhk5TWHu_R72Apg8';
 
-function createAuthToken() {}
