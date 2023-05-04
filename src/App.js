@@ -5,6 +5,7 @@ import './App.css';
 import Login from './common/Login';
 import Home from './common/Home';
 import Main from './common/Main';
+import Vehicles from './Vehicle/Vehicles';
 import Page404 from './common/Page404';
 
 import ConfigService from './services/ConfigService'
@@ -21,6 +22,7 @@ function App() {
         <Route path={ConfigService.pageUrls.LOGIN_URL} element={<Login />} />
         <Route path={ConfigService.pageUrls.HOME_URL} element={<Home />} />
         <Route path={ConfigService.pageUrls.ABOUT_URL} element={<RequireAuth><div>About page</div></RequireAuth>} />
+        <Route path={ConfigService.pageUrls.VEHICLES} element={<RequireAuth><Vehicles /></RequireAuth>} />
 
         <Route path="*" element={<Page404 />} />
       </Routes>

@@ -1,20 +1,24 @@
 
-const successfulCredentials = {
+const SUCCESSFUL_CREDENTIALS = {
     username: 'root',
     password: 'root'
 }
+const PROMISE_TIMEOUT_MS = 200;
 
 export function loginResponse(username, password) {
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
-            if(username === successfulCredentials.username && password === successfulCredentials.password) {
+            if(isCredentialsValid(username, password)) {
                 resolve(defaultJwtToken);
-            }
-            else {
+            } else {
                 reject('Username password not matching');
             }
-        }, 200)
+        }, PROMISE_TIMEOUT_MS)
     });
+}
+
+function isCredentialsValid(username, password) {
+    return username === SUCCESSFUL_CREDENTIALS.username && password === SUCCESSFUL_CREDENTIALS.password
 }
 
 
