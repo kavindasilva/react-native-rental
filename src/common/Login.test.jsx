@@ -1,8 +1,7 @@
 
 
 import React from 'react';
-import { render, screen } from '@testing-library/react'
-
+import { render, screen, waitFor } from '@testing-library/react'
 import Login from './Login'
 import * as loginService from '../services/loginService';
 import userEvent from '@testing-library/user-event';
@@ -15,21 +14,14 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate
 }));
 
-beforeAll(() => {
-  // const user = userEvent.setup();
-});
-
 beforeEach(() => {
   component = render(<Login />);
-
-  spy = jest.spyOn(loginService, 'login').mockImplementation(() =>
-    new Promise(function (resolve, reject) {
-      setTimeout(function () {
-        resolve({});
-      }, 200)
-    })
-  );
+  spy = jest.spyOn(loginService, 'login').mockResolvedValue({});
 })
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
 describe('initial page load', () => {
   it('should render username input', () => {
@@ -54,19 +46,52 @@ describe('initial page load', () => {
 });
 
 describe('click Login', () => {
-  it('should call login', () => {
-    userEvent.click(screen.getByRole('button'));
+  it('should call login when Login button clicked', () => {
+    waitFor(async () => {
+      await userEvent.click(screen.getByRole('button'));
+    });
+
     expect(spy).toHaveBeenCalledWith('', '');
   });
 
   it('should call login with typed username password', () => {
-    userEvent.type(document.getElementById('txt_username'), 'someUsername')
-    userEvent.type(document.getElementById('txt_password'), 'somePassword')
+    waitFor(async () => {
+      userEvent.type(document.getElementById('txt_username'), 'someUsername')
+      userEvent.type(document.getElementById('txt_password'), 'somePassword')
 
-    userEvent.click(screen.getByRole('button'));
+      await userEvent.click(screen.getByRole('button'));
+    });
+
     expect(spy).toHaveBeenCalledWith('someUsername', 'somePassword');
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
 
-    expect(screen.queryByRole('alert')).toBeNull(); //
+  it('should show error when username password not correct', () => {
+    spy = jest.spyOn(loginService, 'login').mockRejectedValue('promiseErrorString');
+
+    waitFor(async () => {
+      await userEvent.click(screen.getByRole('button'));
+    });
+
+    expect(spy).toHaveBeenCalledWith('', '');
+
+    waitFor(async () => {
+      const loginFailedAlert = await screen.findAllByText('promiseErrorString');
+      expect(loginFailedAlert).not.toBeNull();
+    });
+
+  });
+
+  it('should not show error when username password are correct', () => {
+    waitFor(async () => {
+      await userEvent.click(screen.getByRole('button'));
+    });
+    expect(spy).toHaveBeenCalledWith('', '');
+
+    waitFor(async () => {
+      const loginFailedAlert = await screen.queryByRole('alert');
+      expect(loginFailedAlert).toBeNull();
+    });
   });
 });
 
