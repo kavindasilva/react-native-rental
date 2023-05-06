@@ -48,9 +48,9 @@ function Login() {
     <div className="App">
       <form onSubmit={loginUser} >
         Login
-        <div><TextField type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username"></TextField></div>
-        <div><TextField type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"></TextField></div>
-        <div><Button type="submit" variant="contained" disabled={isLoading} fullWidth={true}>Login</Button></div>
+        <div><TextField id="txt_username" type="text" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username"></TextField></div>
+        <div><TextField id="txt_password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password"></TextField></div>
+        <div><Button id="btn_submit" type="submit" variant="contained" disabled={isLoading} fullWidth={true}>Login</Button></div>
 
         {loginError && <Alert severity="error" onClose={() => setLoginError('')}>{loginError}</Alert>}
       </form>
